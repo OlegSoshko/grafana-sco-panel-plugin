@@ -2,10 +2,13 @@
 
 1. поднять версию в package.json (автоматизировать)
 2. выполнить `npm install`
-3. подписать плагин `npx @grafana/sign-plugin@latest`
-4. переименовать dist `mv dist/ sco-panel`
-5. упаковываем `zip myorg-simple-panel-1.0.0.zip myorg-simple-panel -r`
-6. удаляем sco-panel `rm -fr sco-panel
+3. добавить токен, если его нет `export GRAFANA_ACCESS_POLICY_TOKEN=<YOUR_ACCESS_POLICY_TOKEN>`
+   YOUR_ACCESS_POLICY_TOKEN - это ваш токен, создаётся в личном кабинете grafana claud, если ещё не был создан ранее. Подробнее читайте руководство по подписанию плагина.
+4. подписать плагин `npx @grafana/sign-plugin@latest --rootUrls <URL's>`
+   URL's - список адресов, через запятую, на которых планируется установить плагин (необходимо так как плагин подписывается как приватный).
+5. переименовать dist `mv dist/ sco-panel`
+6. упаковываем `zip myorg-simple-panel-1.0.0.zip myorg-simple-panel -r`
+7. удаляем sco-panel `rm -fr sco-panel
 
 # Установка плагина
 

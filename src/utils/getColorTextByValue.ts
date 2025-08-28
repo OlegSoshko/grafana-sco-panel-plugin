@@ -8,13 +8,11 @@ export const getColorTextByValue = (theme: GrafanaTheme2, value: number | undefi
 
   if (value >= 0 && value < 5) {
     return theme.colors.primary.text;
-  } else if (value >= 0 && value < 50) {
+  } else if (value >= 5 && value < 10) {
     return theme.colors.success.text;
-  } else if (value >= 50 && value < 80) {
+  } else if (value >= 10 && value < 40) {
     return theme.colors.warning.text;
-  } else if (value >= 80 && value <= 100) {
-    return theme.colors.error.text;
   }
 
-  return defaultColor;
+  return theme.colors.error.text;
 };

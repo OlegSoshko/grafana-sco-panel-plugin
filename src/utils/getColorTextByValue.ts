@@ -1,4 +1,4 @@
-export const getColorTextByValue = (value: number | undefined): string => {
+export const getColorTextByValue = (value: number | undefined | null): string => {
   if (!value) return '#ff9900';
 
   if (value >= 0 && value < 5) {

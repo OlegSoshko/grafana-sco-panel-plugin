@@ -1,12 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { css, cx } from '@emotion/css';
 import { useStyles2 } from '@grafana/ui';
-import { getColorTextByValue, prepareNumber } from 'utils';
-import { FontSizeCalculator } from 'services';
+import { getColorTextByValue, prepareNumber, calculateFontSize } from 'utils';
 
 interface Props {
   title: string;
-  value: number | undefined;
+  value: number | undefined | null;
   className?: string;
 }
 
@@ -28,6 +27,10 @@ const getStyles = () => {
       position: absolute;
       top: 4px;
       left: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
     `,
     value: css`
       font-weight: bold;
@@ -38,28 +41,27 @@ const getStyles = () => {
 
 export const Section: React.FC<Props> = ({ title, value, className }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const calculator = new FontSizeCalculator();
   const styles = useStyles2(getStyles);
-  const [valueFontSize, setValueFontSize] = useState(34);
+  const [fontSize, setFontSize] = useState(16);
 
-  const preparedValue = value === undefined ? '~' : prepareNumber(value);
+  const preparedValue = typeof value === 'number' ? prepareNumber(value) : '~';
   const color = getColorTextByValue(value);
 
   useEffect(() => {
-    const updateValueFontSize = () => {
+    const updateFontSize = () => {
       if (sectionRef.current) {
         const rect = sectionRef.current.getBoundingClientRect();
-        const width = rect.width;
-        const height = rect.height;
+        const containerWidth = rect.width;
+        const containerHeight = rect.height;
         
-        const newValueSize = calculator.calculateValueFontSize(width, height, preparedValue);
-        setValueFontSize(newValueSize);
+        const fontSize = calculateFontSize({ containerWidth, containerHeight });
+        setFontSize(fontSize);
       }
     };
 
-    updateValueFontSize();
+    updateFontSize();
 
-    const resizeObserver = new ResizeObserver(updateValueFontSize);
+    const resizeObserver = new ResizeObserver(updateFontSize);
     
     if (sectionRef.current) {
       resizeObserver.observe(sectionRef.current);
@@ -68,12 +70,12 @@ export const Section: React.FC<Props> = ({ title, value, className }) => {
     return () => {
       resizeObserver.disconnect();
     };
-  }, [preparedValue]);
+  }, []);
 
   return (
     <div ref={sectionRef} className={cx(styles.section, className)}>
       <h6 className={styles.title}>{title}</h6>
-      <span className={cx(styles.value, css`color: ${color}; font-size: ${valueFontSize}px`)}>
+      <span className={cx(styles.value, css`color: ${color}; font-size: ${fontSize}px`)}>
         {preparedValue}
       </span>
     </div>

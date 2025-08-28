@@ -7,7 +7,8 @@
 4. подписать плагин `npx @grafana/sign-plugin@latest --rootUrls <URL's>`
    URL's - список адресов, через запятую, на которых планируется установить плагин (необходимо так как плагин подписывается как приватный).
 5. переименовать dist `mv dist/ sco-panel`
-6. упаковываем `zip myorg-simple-panel-1.0.0.zip myorg-simple-panel -r`
+6. упаковываем `zip sco-panel-<ВЕРСИЯ>.zip sco-panel -r`
+   версию надо вписать, к примеру `zip sco-panel-1.0.1.zip sco-panel -r`
 7. удаляем sco-panel `rm -fr sco-panel
 
 # Установка плагина

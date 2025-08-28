@@ -1,6 +1,7 @@
 import { PanelPlugin } from '@grafana/data';
 import { SimpleOptions } from './types';
 import { SimplePanel } from './components/SimplePanel';
+import { SimpleEditor } from 'components/SimpleEditor';
 
 export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOptions((builder) => {
   return builder
@@ -28,5 +29,14 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOption
       path: 'e',
       name: 'Title block E',
       defaultValue: '',
+    }).addCustomEditor({
+      id: 'index',
+      path: 'index',
+      name: 'Index',
+      editor: SimpleEditor,
+      settings: {
+        from: 1,
+        to: 10,
+      },
     });
 });

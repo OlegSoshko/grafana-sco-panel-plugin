@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { css, cx } from '@emotion/css';
-import { useStyles2 } from '@grafana/ui';
+import { useStyles2, useTheme2 } from '@grafana/ui';
+import { GrafanaTheme2 } from '@grafana/data';
 import { getColorTextByValue, prepareNumber, calculateFontSize } from 'utils';
 
 interface Props {
@@ -9,7 +10,7 @@ interface Props {
   className?: string;
 }
 
-const getStyles = () => {
+const getStyles = (theme: GrafanaTheme2) => {
   return {
     section: css`
       display: flex;
@@ -18,9 +19,13 @@ const getStyles = () => {
       justify-content: center;
       padding: 4px;
       border-radius: 4px;
-      border: 1px solid rgba(204, 204, 220, 0.12);
+      border: 1px solid ${theme.colors.border.weak};
       position: relative;
       overflow: hidden;
+    `,
+    error: css`
+      border-color: ${theme.colors.error.border};
+      background-color: ${theme.colors.error.transparent};
     `,
     title: css`
       margin: 0px;
@@ -43,9 +48,11 @@ export const Section: React.FC<Props> = ({ title, value, className }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const styles = useStyles2(getStyles);
   const [fontSize, setFontSize] = useState(16);
+  const theme = useTheme2();
 
-  const preparedValue = typeof value === 'number' ? prepareNumber(value) : '~';
-  const color = getColorTextByValue(value);
+  const isValueValid = typeof value === 'number' && !isNaN(value);
+  const preparedValue = isValueValid ? prepareNumber(value) : '-';
+  const color = getColorTextByValue(theme, value);
 
   useEffect(() => {
     const updateFontSize = () => {
@@ -73,7 +80,7 @@ export const Section: React.FC<Props> = ({ title, value, className }) => {
   }, []);
 
   return (
-    <div ref={sectionRef} className={cx(styles.section, className)}>
+    <div ref={sectionRef} className={cx(styles.section, isValueValid ? '' : styles.error, className)}>
       <h6 className={styles.title}>{title}</h6>
       <span className={cx(styles.value, css`color: ${color}; font-size: ${fontSize}px`)}>
         {preparedValue}

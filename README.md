@@ -9,7 +9,7 @@
 5. переименовать dist `mv dist/ sco-panel`
 6. упаковываем `zip sco-panel-<ВЕРСИЯ>.zip sco-panel -r`
    версию надо вписать, к примеру `zip sco-panel-1.0.1.zip sco-panel -r`
-7. удаляем sco-panel `rm -fr sco-panel
+7. удаляем sco-panel `rm -fr sco-panel`
 
 # Установка плагина
 

@@ -1,12 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { css, cx } from '@emotion/css';
-import { useStyles2, useTheme2 } from '@grafana/ui';
+import { useStyles2 } from '@grafana/ui';
 import { GrafanaTheme2 } from '@grafana/data';
 import { getColorTextByValue, prepareNumber, calculateFontSize } from 'utils';
+import { Threshold } from '../types';
 
 interface Props {
   title: string;
   value: number | undefined | null;
+  thresholds: Threshold[];
   className?: string;
 }
 
@@ -44,15 +46,14 @@ const getStyles = (theme: GrafanaTheme2) => {
   };
 };
 
-export const Section: React.FC<Props> = ({ title, value, className }) => {
+export const Section: React.FC<Props> = ({ title, value, thresholds, className }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const styles = useStyles2(getStyles);
   const [fontSize, setFontSize] = useState(16);
-  const theme = useTheme2();
 
   const isValueValid = typeof value === 'number' && !isNaN(value);
   const preparedValue = isValueValid ? prepareNumber(value) : '-';
-  const color = getColorTextByValue(theme, value);
+  const color = getColorTextByValue(value, thresholds);
 
   useEffect(() => {
     const updateFontSize = () => {

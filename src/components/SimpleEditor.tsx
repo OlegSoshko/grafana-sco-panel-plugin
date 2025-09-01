@@ -1,33 +1,102 @@
 import React from "react";
-import { SelectableValue, StandardEditorProps } from "@grafana/data";
-import { Select, Button, Input } from "@grafana/ui";
+import { css } from '@emotion/css';
+import { StandardEditorProps } from "@grafana/data";
+import { Button, useStyles2, Input, ColorPicker, IconButton, Divider, Label } from "@grafana/ui";
+import { BlockSettings } from "../types";
+import { generateUUID } from "../utils";
 
-interface Settings {
-  from: number;
-  to: number;
-}
+type Props = StandardEditorProps<BlockSettings["thresholds"]>;
 
-type Props = StandardEditorProps<number, Settings>;
+const getStyles = () => {
+  return {
+    container: css`
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    `,
+    add_threshold: css`
+      width: 100%;
+      justify-content: center;
+    `,
+  };
+};
 
-export const SimpleEditor = ({ item, value, onChange }: Props) => {
-  const options: Array<SelectableValue<number>> = [];
+export const SimpleEditor = ({ value, onChange }: Props) => {
+  const styles = useStyles2(getStyles);
 
-  // Default values
-  const from = item.settings?.from ?? 1;
-  const to = item.settings?.to ?? 10;
+  const onAddThreshold = () => {
+    const lastAddedThreshold = value[0];
 
-  for (let i = from; i <= to; i++) {
-    options.push({
-      label: i.toString(),
-      value: i,
-    });
+    onChange([
+      {
+        id: generateUUID(),
+        value: (lastAddedThreshold.value || 0) + 10,
+        color: '#73BF69'
+      },
+      ...value
+    ]);
+  };
+
+  const onChangeColor = (id: string) => (newColor: string) => {
+    onChange(value.map((c) => c.id === id ? { ...c, color: newColor } : c));
+  };
+
+  const onChangeValue = (id: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(value.map((c) => c.id === id ? { ...c, value: event.target.value ? Number(event.target.value) : undefined } : c));
   }
 
+  const onDeleteThreshold = (id: string) => () => {
+    onChange(value.filter((c) => c.id !== id));
+  };
+
   return (
-    <>
-      <Select options={options} value={value} onChange={(selectableValue) => onChange(selectableValue.value)} />
-      <Input value={value} onChange={(e) => onChange(Number(e.target.value))} />
-      <Button onClick={() => onChange(value + 1)}>+</Button>
-    </>
+    <div className={styles.container}>
+      <Divider />
+      <Label>Thresholds</Label>
+      <Button className={styles.add_threshold} variant="secondary" size="sm" icon="plus" onClick={onAddThreshold}>Add threshold</Button>
+      {
+        value.sort((a, b) => (b.value || 0) - (a.value || 0)).map((threshold) => {
+          const isBase = threshold.name === 'base';
+
+          if (isBase) {
+            return (
+              <Input
+                disabled
+                value={threshold.name}
+                key={threshold.id}
+                prefix={
+                  <ColorPicker
+                    color={threshold.color}
+                    onChange={onChangeColor(threshold.id)}
+                  />
+                }
+              />
+            );
+          }
+
+          return (
+            <Input
+              key={threshold.id}
+              value={threshold.value}
+              type="number"
+              onChange={onChangeValue(threshold.id)}
+              prefix={
+                <ColorPicker
+                  color={threshold.color}
+                  onChange={onChangeColor(threshold.id)}
+                />
+              }
+              suffix={
+                <IconButton
+                  name="trash-alt"
+                  aria-label="Delete threshold"
+                  onClick={onDeleteThreshold(threshold.id)}
+                />
+              }
+            />
+          );
+        })
+      }
+    </div>
   );
 };

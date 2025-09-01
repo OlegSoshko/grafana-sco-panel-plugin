@@ -1,18 +1,24 @@
-import { GrafanaTheme2 } from "@grafana/data";
+import { Threshold } from "../types";
 
-const defaultColor = '#ff9900'
+const errorColor = '#F2495C';
 
-export const getColorTextByValue = (theme: GrafanaTheme2, value: number | undefined | null): string => {
-  if (!theme) return defaultColor;
-  if (!value) return theme.colors.error.text;
+export const getColorTextByValue = (
+  value: number | undefined | null,
+  thresholds: Threshold[] = []
+): string => {
+  if (value === undefined || value === null) return errorColor;
 
-  if (value >= 0 && value < 5) {
-    return theme.colors.primary.text;
-  } else if (value >= 5 && value < 10) {
-    return theme.colors.success.text;
-  } else if (value >= 10 && value < 40) {
-    return theme.colors.warning.text;
+  const baseThreshold = thresholds.find(item => item.name === 'base')!;
+
+  const sortedThresholds = [...thresholds]
+    .filter(t => t.value !== undefined)
+    .sort((a, b) => (b.value || 0) - (a.value || 0));
+  
+  for (const threshold of sortedThresholds) {
+    if (threshold.value !== undefined && value >= threshold.value) {
+      return threshold.color;
+    }
   }
 
-  return theme.colors.error.text;
+  return baseThreshold.color;
 };

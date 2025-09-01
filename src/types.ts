@@ -1,7 +1,19 @@
+export interface Threshold {
+  id: string;
+  color: string;
+  name?: string;
+  value?: number;
+}
+
+export interface BlockSettings {
+  title: string;
+  thresholds: Threshold[];
+}
+
 export interface SimpleOptions {
-  a: string;
-  b: string;
-  c: string;
-  d: string;
-  e: string;
+  blockA: BlockSettings;
+  blockB: BlockSettings;
+  blockC: BlockSettings;
+  blockD: BlockSettings;
+  blockE: BlockSettings;
 }

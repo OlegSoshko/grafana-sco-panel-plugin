@@ -2,14 +2,15 @@
 
 1. поднять версию в package.json (автоматизировать)
 2. выполнить `npm install`
-3. добавить токен, если его нет `export GRAFANA_ACCESS_POLICY_TOKEN=<YOUR_ACCESS_POLICY_TOKEN>`
+3. выполнить `npm run build`
+4. добавить токен, если его нет `export GRAFANA_ACCESS_POLICY_TOKEN=<YOUR_ACCESS_POLICY_TOKEN>`
    YOUR_ACCESS_POLICY_TOKEN - это ваш токен, создаётся в личном кабинете grafana claud, если ещё не был создан ранее. Подробнее читайте руководство по подписанию плагина.
-4. подписать плагин `npx @grafana/sign-plugin@latest --rootUrls <URL's>`
+5. подписать плагин `npx @grafana/sign-plugin@latest --rootUrls <URL's>`
    URL's - список адресов, через запятую, на которых планируется установить плагин (необходимо так как плагин подписывается как приватный).
-5. переименовать dist `mv dist/ sco-panel`
-6. упаковываем `zip sco-panel-<ВЕРСИЯ>.zip sco-panel -r`
+6. переименовать dist `mv dist/ sco-panel`
+7. упаковываем `zip sco-panel-<ВЕРСИЯ>.zip sco-panel -r`
    версию надо вписать, к примеру `zip sco-panel-1.0.1.zip sco-panel -r`
-7. удаляем sco-panel `rm -fr sco-panel`
+8. удаляем sco-panel `rm -fr sco-panel`
 
 # Установка плагина
 

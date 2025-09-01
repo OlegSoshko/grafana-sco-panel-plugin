@@ -1,32 +1,123 @@
 import { PanelPlugin } from '@grafana/data';
 import { SimpleOptions } from './types';
 import { SimplePanel } from './components/SimplePanel';
+import { SimpleEditor } from 'components/SimpleEditor';
 
 export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOptions((builder) => {
   return builder
-    .addTextInput({
-      path: 'a',
-      name: 'Title block A',
-      defaultValue: 'CPU SCO',
+    .addNestedOptions({
+      category: ['Block A'],
+      path: 'blockA',
+      build: (b) => {
+        return b
+          .addTextInput({
+            path: 'title',
+            name: 'Title',
+            defaultValue: 'CPU SCO',
+          })
+          .addCustomEditor({
+            id: 'thresholds',
+            path: 'thresholds',
+            name: '',
+            defaultValue: [{
+              id: 'base',
+              name: 'base',
+              color: '#1F60C4',
+            }],
+            editor: SimpleEditor,
+          });
+      },
     })
-    .addTextInput({
-      path: 'b',
-      name: 'Title block B',
-      defaultValue: 'CPU RFID',
+    .addNestedOptions({
+      category: ['Block B'],
+      path: 'blockB',
+      build: (b) => {
+        return b
+          .addTextInput({
+            path: 'title',
+            name: 'Title',
+            defaultValue: 'CPU RFID',
+          })
+          .addCustomEditor({
+            id: 'thresholds',
+            path: 'thresholds',
+            name: '',
+            defaultValue: [{
+              id: 'base',
+              name: 'base',
+              color: '#1F60C4',
+            }],
+            editor: SimpleEditor,
+          });
+        }
     })
-    .addTextInput({
-      path: 'c',
-      name: 'Title block C',
-      defaultValue: '',
+    .addNestedOptions({
+      category: ['Block C'],
+      path: 'blockC',
+      build: (b) => {
+        return b
+          .addTextInput({
+            path: 'title',
+            name: 'Title',
+            defaultValue: '',
+          })
+          .addCustomEditor({
+            id: 'thresholds',
+            path: 'thresholds',
+            name: '',
+            defaultValue: [{
+              id: 'base',
+              name: 'base',
+              color: '#1F60C4',
+            }],
+            editor: SimpleEditor,
+          });
+        }
     })
-    .addTextInput({
-      path: 'd',
-      name: 'Title block D',
-      defaultValue: '',
+    .addNestedOptions({
+      category: ['Block D'],
+      path: 'blockD',
+      build: (b) => {
+        return b
+          .addTextInput({
+            path: 'title',
+            name: 'Title',
+            defaultValue: '',
+          })
+          .addCustomEditor({
+            id: 'thresholds',
+            path: 'thresholds',
+            name: '',
+            defaultValue: [{
+              id: 'base',
+              name: 'base',
+              color: '#1F60C4',
+            }],
+            editor: SimpleEditor,
+          });
+        }
     })
-    .addTextInput({
-      path: 'e',
-      name: 'Title block E',
-      defaultValue: '',
+    .addNestedOptions({
+      category: ['Block E'],
+      path: 'blockE',
+      build: (b) => {
+        return b
+          .addTextInput({
+            path: 'title',
+            name: 'Title',
+            defaultValue: '',
+          })
+          .addCustomEditor({
+            id: 'thresholds',
+            path: 'thresholds',
+            name: '',
+            defaultValue: [{
+              id: 'base',
+              name: 'base',
+              color: '#1F60C4',
+            }],
+            editor: SimpleEditor,
+          });
+        }
     });
 });

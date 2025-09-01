@@ -45,8 +45,14 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
   }
 
   const radii = data.series
-    .map((series) => series.fields.find((field) => field.type === 'number'))
-    .map((field) => field?.values.get(field.values.length - 1));
+    .map((series) => ({ name: series.refId, value:series.fields.find((field) => field.type === 'number')}))
+    .reduce<Record<string, number | undefined | null>>((acc, curr) => {
+      if (curr.name) {
+        acc[curr.name] = curr.value?.values[curr.value?.values.length - 1];
+      }
+
+      return acc;
+    }, { });
 
   return (
     <div
@@ -59,11 +65,11 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
       )}
     >
       <div className={styles.grid}>
-        <Section title={options.a} className={styles.a} value={radii[0]} />
-        <Section title={options.b} className={styles.b} value={radii[1]} />
-        <Section title={options.c} className={styles.c} value={radii[2]} />
-        <Section title={options.d} className={styles.d} value={radii[3]} />
-        <Section title={options.e} className={styles.e} value={radii[4]} />
+        <Section title={options.blockA.title} className={styles.a} value={radii['A']} thresholds={options.blockA.thresholds} />
+        <Section title={options.blockB.title} className={styles.b} value={radii['B']} thresholds={options.blockB.thresholds} />
+        <Section title={options.blockC.title} className={styles.c} value={radii['C']} thresholds={options.blockC.thresholds} />
+        <Section title={options.blockD.title} className={styles.d} value={radii['D']} thresholds={options.blockD.thresholds} />
+        <Section title={options.blockE.title} className={styles.e} value={radii['E']} thresholds={options.blockE.thresholds} />
       </div>
     </div>
   );
